@@ -5,7 +5,7 @@ export async function GET() {
     const db = await connectDB();
     const [rows] = await db.execute("SELECT * FROM schools");
 
-    // Add proper base64 prefix so <img /> works
+    // Add base64 
     const schoolsWithImages = rows.map((school) => ({
       ...school,
       image: school.image

@@ -1,26 +1,30 @@
 "use client";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import Loader from "../components/Loader";
 
 export default function AddSchool() {
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm();
-  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const onSubmit = async (data) => {
-    let base64Image = "";
+    setLoading(true);
 
+    let base64Image = "";
     if (data.image && data.image[0]) {
       const file = data.image[0];
       const reader = new FileReader();
-
-      // FileReader works async → wrap in Promise
       base64Image = await new Promise((resolve, reject) => {
         reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result.split(",")[1]); // remove "data:image/..;base64,"
+        reader.onload = () => resolve(reader.result.split(",")[1]);
         reader.onerror = (error) => reject(error);
       });
     }
@@ -32,47 +36,115 @@ export default function AddSchool() {
       state: data.state,
       contact: data.contact,
       email_id: data.email_id,
-      image: base64Image, // send base64 string
+      image: base64Image,
     };
 
-    const res = await fetch("/api/addSchool", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
+    try {
+      const res = await fetch("/api/addSchool", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
-    const result = await res.json();
-    setMessage(result.message || result.error);
+      const result = await res.json();
+      if (res.ok) {
+        toast.success("School added successfully!");
+        reset(); 
+        router.push("/");
+      } else {
+        toast.error(`${result.error}`);
+      }
+    } catch (err) {
+      toast.error("Something went wrong!");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div style={{ maxWidth: "400px", margin: "auto" }}>
-      <h2>Add School</h2>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <input {...register("name", { required: true })} placeholder="Name" />
-        {errors.name && <p>Name is required</p>}
+    <>
+      {loading && <Loader />}
 
-        <input
-          {...register("address", { required: true })}
-          placeholder="Address"
-        />
-        <input {...register("city", { required: true })} placeholder="City" />
-        <input {...register("state", { required: true })} placeholder="State" />
-        <input
-          {...register("contact", { required: true })}
-          placeholder="Contact"
-        />
-        <input
-          {...register("email_id", { required: true, pattern: /^\S+@\S+$/i })}
-          placeholder="Email"
-        />
-        {errors.email_id && <p>Invalid email</p>}
+      <div className="form-container">
+        <div className="form-card">
+          <h2>Add a School</h2>
 
-        <input type="file" {...register("image", { required: false })} />
+          <form onSubmit={handleSubmit(onSubmit)}>
+            {/* Name */}
+            <label>School Name</label>
+            <input
+              {...register("name", { required: "School name is required" })}
+              placeholder="Enter school name"
+            />
+            {errors.name && <p className="error">{errors.name.message}</p>}
 
-        <button type="submit">Add</button>
-      </form>
-      <p>{message}</p>
-    </div>
+            {/* Address */}
+            <label>Address</label>
+            <input
+              {...register("address", { required: "Address is required" })}
+              placeholder="Enter address"
+            />
+            {errors.address && <p className="error">{errors.address.message}</p>}
+
+            {/* City */}
+            <label>City</label>
+            <input
+              {...register("city", { required: "City is required" })}
+              placeholder="Enter city"
+            />
+            {errors.city && <p className="error">{errors.city.message}</p>}
+
+            {/* State */}
+            <label>State</label>
+            <input
+              {...register("state", { required: "State is required" })}
+              placeholder="Enter state"
+            />
+            {errors.state && <p className="error">{errors.state.message}</p>}
+
+            {/* Contact */}
+            <label>Contact</label>
+            <input
+              {...register("contact", {
+                required: "Contact number is required",
+                pattern: {
+                  value: /^[0-9]{10}$/,
+                  message: "Contact must be a 10-digit number",
+                },
+              })}
+              placeholder="Enter contact number"
+              type="tel"
+            />
+            {errors.contact && <p className="error">{errors.contact.message}</p>}
+
+            {/* Email */}
+            <label>Email</label>
+            <input
+              {...register("email_id", {
+                required: "Email is required",
+                pattern: {
+                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, // basic email format
+                  message: "Invalid email format (use example@email.com)",
+                },
+              })}
+              placeholder="Enter email"
+              type="email"
+            />
+            {errors.email_id && <p className="error">{errors.email_id.message}</p>}
+
+            {/* Image */}
+            <label>Upload Image</label>
+            <input
+              type="file"
+              {...register("image", { required: "Image is required" })}
+            />
+            {errors.image && <p className="error">{errors.image.message}</p>}
+
+            {/* Submit */}
+            <button type="submit">Add School</button>
+          </form>
+        </div>
+      </div>
+    </>
   );
 }
