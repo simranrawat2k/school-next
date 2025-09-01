@@ -11,24 +11,34 @@ export default function AddSchool() {
   const [message, setMessage] = useState("");
 
   const onSubmit = async (data) => {
-    const formData = new FormData();
+    let base64Image = "";
 
-    // append normal fields
-    formData.append("name", data.name);
-    formData.append("address", data.address);
-    formData.append("city", data.city);
-    formData.append("state", data.state);
-    formData.append("contact", data.contact);
-    formData.append("email_id", data.email_id);
-
-    // append the file (first file only)
     if (data.image && data.image[0]) {
-      formData.append("image", data.image[0]);
+      const file = data.image[0];
+      const reader = new FileReader();
+
+      // FileReader works async → wrap in Promise
+      base64Image = await new Promise((resolve, reject) => {
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result.split(",")[1]); // remove "data:image/..;base64,"
+        reader.onerror = (error) => reject(error);
+      });
     }
+
+    const payload = {
+      name: data.name,
+      address: data.address,
+      city: data.city,
+      state: data.state,
+      contact: data.contact,
+      email_id: data.email_id,
+      image: base64Image, // send base64 string
+    };
 
     const res = await fetch("/api/addSchool", {
       method: "POST",
-      body: formData,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
     });
 
     const result = await res.json();
