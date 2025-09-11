@@ -1,6 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import Loader from "../components/Loader";
+import "./ShowSchool.css";
+import { toast } from "react-toastify";
+
 
 
 export default function ShowSchools() {
@@ -38,6 +41,35 @@ export default function ShowSchools() {
 
     setFilteredSchools(filtered);
   }, [search, cityFilter, schools]);
+
+  const handleDelete = async (id) => {
+  if (!confirm("Are you sure you want to delete this school?")) return;
+
+  setLoading(true);
+  try {
+    const res = await fetch(`/api/deleteSchool?id=${id}`, {
+      method: "DELETE",
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      toast.success("School deleted successfully!");
+      setSchools((prev) => prev.filter((school) => school.id !== id));
+      setFilteredSchools((prev) => prev.filter((school) => school.id !== id));
+    } else {
+      toast.error(data.error || "Failed to delete school");
+    }
+  } catch (err) {
+    console.error(err);
+    toast.error("Something went wrong while deleting!");
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+
 
   if (loading) return <Loader />;
 
@@ -90,6 +122,17 @@ export default function ShowSchools() {
                 <h3 className="school-name">{school.name}</h3>
                 <p className="school-address">{school.address}</p>
                 <span className="school-city">{school.city}</span>
+              </div>
+
+              {/* Action buttons */}
+              <div className="card-actions">
+                <button className="btn-edit">✏️ Edit</button>
+                <button
+                  className="btn-delete"
+                  onClick={() => handleDelete(school.id)}
+                >
+                  🗑️ Delete
+                </button>
               </div>
             </div>
           ))}

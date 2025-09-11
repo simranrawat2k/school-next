@@ -1,14 +1,9 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  color-scheme: light; 
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
 
 html,
 body {
@@ -136,78 +131,11 @@ a {
   }
 }
 
-/* Home Page Styling */
-.home-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background: #f3f4f6;
-  padding: 20px;
-}
-
-.home-card {
-  background: #fff;
-  padding: 40px 30px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  max-width: 500px;
-  width: 100%;
-}
-
-.home-card h1 {
-  font-size: 26px;
-  color: #4f46e5;
-  margin-bottom: 10px;
-}
-
 .home-card p {
   font-size: 16px;
   color: #555;
   margin-bottom: 25px;
 }
-
-/* Actions container */
-.home-actions {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  flex-wrap: wrap;
-}
-
-/* Buttons */
-.btn-primary,
-.btn-secondary {
-  padding: 12px 20px;
-  border-radius: 8px;
-  font-size: 15px;
-  font-weight: 500;
-  text-decoration: none;
-  display: inline-block;
-  transition: background 0.3s ease, transform 0.2s ease;
-}
-
-/* Primary button */
-.btn-primary {
-  background: #4f46e5;
-  color: white;
-}
-.btn-primary:hover {
-  background: #3730a3;
-  transform: translateY(-2px);
-}
-
-/* Secondary button */
-.btn-secondary {
-  background: #e5e7eb;
-  color: #111827;
-}
-.btn-secondary:hover {
-  background: #d1d5db;
-  transform: translateY(-2px);
-}
-
 
 /* Fullscreen overlay */
 .loader-overlay {
@@ -238,20 +166,7 @@ a {
   100% { transform: rotate(360deg); }
 }
 
-.schools-page {
-  padding: 40px 20px;
-  background: linear-gradient(180deg, #f4f7fb, #eef1f6);
-  min-height: 100vh;
-  text-align: center;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-}
 
-.page-title {
-  font-size: 32px;
-  font-weight: 700;
-  color: #2c3e50;
-  margin-bottom: 25px;
-}
 
 .page-subtitle {
   font-size: 16px;
@@ -259,80 +174,6 @@ a {
   margin-bottom: 40px;
 }
 
-.schools-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 30px;
-  max-width: 1200px;
-  margin: auto;
-}
-
-.school-card {
-  background: #fff;
-  border-radius: 14px;
-  overflow: hidden;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
-  text-align: left;
-  display: flex;
-  flex-direction: column;
-}
-
-.school-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.15);
-}
-
-.card-image {
-  width: 100%;
-  height: 200px;
-  overflow: hidden;
-  background: #f0f0f0;
-}
-
-.card-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.4s ease;
-}
-
-.school-card:hover .card-image img {
-  transform: scale(1.08);
-}
-
-.card-body {
-  padding: 18px 20px;
-}
-
-.school-name {
-  font-size: 20px;
-  font-weight: 600;
-  color: #222;
-  margin: 0 0 10px;
-  line-height: 1.3;
-}
-
-.school-address {
-  font-size: 14px;
-  color: #555;
-  margin: 0 0 6px;
-}
-
-.school-city {
-  display: inline-block;
-  font-size: 13px;
-  font-weight: 600;
-  color: #007bff;
-  background: #eaf2ff;
-  padding: 4px 10px;
-  border-radius: 20px;
-}
-
-.no-data {
-  text-align: center;
-  padding: 120px 20px;
-}
 
 .no-data h2 {
   font-size: 24px;
@@ -344,33 +185,74 @@ a {
   color: #777;
 }
 
-/* Existing styles remain the same */
 
-.filter-bar {
+.home-container {
   display: flex;
   justify-content: center;
-  gap: 15px;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #eef2ff, #fdfdfd);
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.home-card {
+  background: #fff;
+  padding: 50px 35px;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  text-align: center;
+  max-width: 600px;
+  width: 100%;
+}
+
+.home-card h1 {
+  font-size: 2rem;
+  color: #4f46e5;
+  margin-bottom: 15px;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: #555;
   margin-bottom: 30px;
+  line-height: 1.6;
+}
+
+.home-actions {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
   flex-wrap: wrap;
 }
 
-.filter-bar input,
-.filter-bar select {
-  padding: 10px 15px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 14px;
-  outline: none;
-  transition: all 0.2s ease;
+.btn-primary,
+.btn-secondary {
+  padding: 14px 22px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.2s ease-in-out;
 }
 
-.filter-bar input:focus,
-.filter-bar select:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+/* Primary button */
+.btn-primary {
+  background: #4f46e5;
+  color: white;
+}
+.btn-primary:hover {
+  background: #3730a3;
+  transform: translateY(-2px);
 }
 
-.filter-bar select {
-  background-color: #fff;
-  cursor: pointer;
+/* Secondary button */
+.btn-secondary {
+  background: #f3f4f6;
+  color: #111827;
+}
+.btn-secondary:hover {
+  background: #e5e7eb;
+  transform: translateY(-2px);
 }
