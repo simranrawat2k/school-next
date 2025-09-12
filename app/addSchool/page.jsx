@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Loader from "../components/Loader";
+import axios from "axios";
 
 export default function AddSchool() {
   const {
@@ -40,22 +41,17 @@ export default function AddSchool() {
     };
 
     try {
-      const res = await fetch("/api/addSchool", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      const res = await axios.post("/api/addSchool", payload);
 
-      const result = await res.json();
-      if (res.ok) {
-        toast.success("School added successfully!");
-        reset(); 
-        router.push("/");
-      } else {
-        toast.error(`${result.error}`);
-      }
+      toast.success("School added successfully!");
+      reset();
+      router.push("/");
     } catch (err) {
-      toast.error("Something went wrong!");
+      if (err.response) {
+        toast.error(err.response.data.error || "Something went wrong!");
+      } else {
+        toast.error("Network error!");
+      }
     } finally {
       setLoading(false);
     }
@@ -84,7 +80,9 @@ export default function AddSchool() {
               {...register("address", { required: "Address is required" })}
               placeholder="Enter address"
             />
-            {errors.address && <p className="error">{errors.address.message}</p>}
+            {errors.address && (
+              <p className="error">{errors.address.message}</p>
+            )}
 
             {/* City */}
             <label>City</label>
@@ -115,7 +113,9 @@ export default function AddSchool() {
               placeholder="Enter contact number"
               type="tel"
             />
-            {errors.contact && <p className="error">{errors.contact.message}</p>}
+            {errors.contact && (
+              <p className="error">{errors.contact.message}</p>
+            )}
 
             {/* Email */}
             <label>Email</label>
@@ -130,7 +130,9 @@ export default function AddSchool() {
               placeholder="Enter email"
               type="email"
             />
-            {errors.email_id && <p className="error">{errors.email_id.message}</p>}
+            {errors.email_id && (
+              <p className="error">{errors.email_id.message}</p>
+            )}
 
             {/* Image */}
             <label>Upload Image</label>

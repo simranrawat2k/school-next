@@ -99,3 +99,37 @@
 .change-email:hover {
   color: #4f46e5;
 }
+
+
+/* Main responsive */
+@media (max-width: 500px) {
+  .login-card {
+    padding: 1.5rem;
+    max-width: 90%;
+  }
+
+  .login-card h2 {
+    font-size: 1.3rem;
+  }
+
+  .login-card input[type="email"],
+  .login-card .otp-input {
+    padding: 10px;
+    font-size: 0.95rem;
+  }
+
+  .otp-input {
+    font-size: 1rem;
+    letter-spacing: 4px;
+  }
+
+  .login-card button {
+    padding: 10px;
+    font-size: 0.95rem;
+  }
+
+  .resend,
+  .change-email {
+    font-size: 0.8rem;
+  }
+}

@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import Loader from "../components/Loader";
 import "./ShowSchool.css";
 import { toast } from "react-toastify";
-
-
+import { useRouter } from "next/navigation";
+import axios from "axios";
 
 export default function ShowSchools() {
   const [schools, setSchools] = useState([]);
@@ -12,20 +12,29 @@ export default function ShowSchools() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [cityFilter, setCityFilter] = useState("");
+  const router = useRouter();
 
-  // Fetch schools from API
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
+  // Fetch schools
   useEffect(() => {
-    fetch("/api/getSchools")
-      .then((res) => res.json())
-      .then((data) => {
-        setSchools(data);
-        setFilteredSchools(data);
+    const fetchSchools = async () => {
+      try {
+        const res = await axios.get("/api/getSchools");
+        setSchools(res.data);
+        setFilteredSchools(res.data);
+      } catch (err) {
+        console.error("Failed to fetch schools", err);
+      } finally {
         setLoading(false);
-      })
-      .catch(() => setLoading(false));
+      }
+    };
+
+    fetchSchools();
   }, []);
 
-  // Apply search and city filter
+  // Apply search + city filter
   useEffect(() => {
     let filtered = schools;
 
@@ -42,38 +51,54 @@ export default function ShowSchools() {
     setFilteredSchools(filtered);
   }, [search, cityFilter, schools]);
 
+  // Delete school
   const handleDelete = async (id) => {
+  if (!token) {
+    toast.info("Please login to update");
+    return;
+  }
+
   if (!confirm("Are you sure you want to delete this school?")) return;
 
   setLoading(true);
   try {
-    const res = await fetch(`/api/deleteSchool?id=${id}`, {
-      method: "DELETE",
+    const res = await axios.delete(`/api/deleteSchool`, {
+      params: { id }, 
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
 
-    const data = await res.json();
-
-    if (res.ok) {
-      toast.success("School deleted successfully!");
+    if (res.status === 200) {
+      toast.success(res.data.message || "School deleted successfully!");
       setSchools((prev) => prev.filter((school) => school.id !== id));
-      setFilteredSchools((prev) => prev.filter((school) => school.id !== id));
+      setFilteredSchools((prev) =>
+        prev.filter((school) => school.id !== id)
+      );
     } else {
-      toast.error(data.error || "Failed to delete school");
+      toast.error(res.data.error || "Failed to delete school");
     }
   } catch (err) {
     console.error(err);
-    toast.error("Something went wrong while deleting!");
+    toast.error(
+      err.response?.data?.error || "Something went wrong while deleting!"
+    );
   } finally {
     setLoading(false);
   }
 };
 
-
-
+  // Edit school
+  const handleEdit = (id) => {
+    if (!token) {
+      toast.info("Please login to update ✨");
+      return;
+    }
+    router.push(`/edit/${id}`);
+  };
 
   if (loading) return <Loader />;
 
-  // Unique cities for city filter
   const cities = [...new Set(schools.map((s) => s.city))];
 
   return (
@@ -126,7 +151,12 @@ export default function ShowSchools() {
 
               {/* Action buttons */}
               <div className="card-actions">
-                <button className="btn-edit">✏️ Edit</button>
+                <button
+                  className="btn-edit"
+                  onClick={() => handleEdit(school.id)}
+                >
+                  ✏️ Edit
+                </button>
                 <button
                   className="btn-delete"
                   onClick={() => handleDelete(school.id)}
