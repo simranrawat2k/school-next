@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
+import Header from "./components/Header";
 
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -19,18 +20,7 @@ export default function Home() {
   return (
     <main className="home-container">
       {/* Header */}
-      <header className="header">
-        <h2 className="logo">🏫 School Project</h2>
-        {isLoggedIn ? (
-          <button className="btn-logout" onClick={handleLogout}>
-            🚪 Logout
-          </button>
-        ) : (
-          <Link href="/login" className="btn-login">
-            🔑 Login
-          </Link>
-        )}
-      </header>
+       <Header />
 
       {/* Hero Section */}
       <section className="hero">

@@ -5,6 +5,7 @@ import "./ShowSchool.css";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import Header from "../components/Header";
 
 export default function ShowSchools() {
   const [schools, setSchools] = useState([]);
@@ -102,7 +103,9 @@ export default function ShowSchools() {
   const cities = [...new Set(schools.map((s) => s.city))];
 
   return (
+    <div> <Header />
     <div className="schools-page">
+     
       <h1 className="page-title">Schools Directory</h1>
 
       {/* Search & City Filter */}
@@ -168,6 +171,7 @@ export default function ShowSchools() {
           ))}
         </div>
       )}
-    </div>
+    </div></div>
+    
   );
 }
