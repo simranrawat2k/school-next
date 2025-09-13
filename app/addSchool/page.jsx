@@ -1,6 +1,6 @@
 "use client";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Loader from "../components/Loader";
@@ -15,6 +15,18 @@ export default function AddSchool() {
   } = useForm();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+   const [authChecked, setAuthChecked] = useState(false);
+
+   // Protect route
+   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error("Logged in to access this page.");
+      router.push("/login");
+    } else {
+      setAuthChecked(true); 
+    }
+  }, [router]);
 
   const onSubmit = async (data) => {
     setLoading(true);
@@ -56,6 +68,8 @@ export default function AddSchool() {
       setLoading(false);
     }
   };
+
+  if (!authChecked) return <Loader />;
 
   return (
     <>

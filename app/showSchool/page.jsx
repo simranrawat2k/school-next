@@ -91,7 +91,7 @@ export default function ShowSchools() {
   // Edit school
   const handleEdit = (id) => {
     if (!token) {
-      toast.info("Please login to update ✨");
+      toast.info("Please login to update");
       return;
     }
     router.push(`/edit/${id}`);

@@ -320,21 +320,22 @@ a {
 }
 
 .btn-primary {
-  background: #5c59e8;
-  color: #fff;
+  background: #c6c6c6;
+  color: #000000;
+  outline:none;
 }
 
 .btn-primary:hover {
-  background: #4338ca;
+  background: #e5e7eb;
 }
 
 .btn-secondary {
-  background: #c6c6c6;
-  color: #111827;
+  background: #5c59e8;
+  color: #ffffff;
 }
 
 .btn-secondary:hover {
-  background: #e5e7eb;
+  background: #4338ca;
 }
 
 .btn-disabled {
