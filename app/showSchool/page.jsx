@@ -14,9 +14,13 @@ export default function ShowSchools() {
   const [search, setSearch] = useState("");
   const [cityFilter, setCityFilter] = useState("");
   const router = useRouter();
+  const [token, setToken] = useState(
+  typeof window !== "undefined" ? localStorage.getItem("token") : null
+);
 
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
+  // const token =
+  //   typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
   // Fetch schools
   useEffect(() => {
@@ -103,7 +107,7 @@ export default function ShowSchools() {
   const cities = [...new Set(schools.map((s) => s.city))];
 
   return (
-    <div> <Header />
+    <div> <Header setToken={setToken}/>
     <div className="schools-page">
      
       <h1 className="page-title">Schools Directory</h1>

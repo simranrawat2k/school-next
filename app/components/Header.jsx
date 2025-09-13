@@ -3,19 +3,24 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
-export default function Header() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+export default function Header({ setToken }) {
+   const [isLoggedIn, setIsLoggedIn] = useState(
+    typeof window !== "undefined" ? !!localStorage.getItem("token") : false
+  );
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+    if (setToken) setToken(null); 
+    toast.success("Logged out successfully!");
+  };
 
   useEffect(() => {
     const loggedIn = localStorage.getItem("token");
     setIsLoggedIn(!!loggedIn);
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setIsLoggedIn(false);
-    toast.success("Logged out successfully!");
-  };
+  
 
   return (
     <header className="header">
